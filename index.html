@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniDev Suite - 40-in-1 Ultimate Developer & Creator Utility Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            850: '#151f32',
+                            900: '#0f172a',
+                            950: '#090d16',
+                        },
+                        indigo: {
+                            600: '#4f46e5',
+                            500: '#6366f1',
+                            400: '#818cf8',
+                        }
+                    },
+                    fontFamily: {
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .code-font { font-family: 'JetBrains Mono', monospace; }
+        /* Custom scrollbar for clean aesthetics */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Header & Sticky Search Bar -->
+    <header class="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/80 border-b border-slate-800 shadow-2xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-cubes text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-indigo-200 to-indigo-400 bg-clip-text text-transparent">OmniDev Suite</h1>
+                    <p class="text-xs text-slate-400 font-medium">40 Professional Client-Side Tools</p>
+                </div>
+            </div>
+
+            <div class="flex-1 max-w-md hidden md:block">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                    <input type="text" id="searchInput" oninput="filterTools()" placeholder="Search all 40 utilities (e.g., JSON, Base64, Password)..." 
+                           class="w-full pl-10 pr-4 py-2.5 bg-slate-950/60 border border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-slate-200 placeholder-slate-500 transition-all shadow-inner">
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <span class="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span> 100% Client-Side
+                </span>
+            </div>
+        </div>
+        <!-- Mobile Search Bar -->
+        <div class="px-4 pb-3 md:hidden">
+            <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input type="text" id="mobileSearchInput" oninput="filterToolsMobile()" placeholder="Search 40 tools..." 
+                       class="w-full pl-10 pr-4 py-2 bg-slate-950/80 border border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-200 placeholder-slate-500">
+            </div>
+        </div>
+    </header>
+
+    <!-- Toast Notification Container -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center bg-indigo-600 text-white px-5 py-3 rounded-2xl shadow-2xl shadow-indigo-600/40 border border-indigo-400/30 text-sm font-medium">
+        <i class="fa-solid fa-circle-check mr-2.5 text-lg"></i>
+        <span id="toastMessage">Action completed successfully!</span>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Category Filter Pills -->
+        <div class="flex items-center space-x-2 overflow-x-auto pb-4 mb-6 scrollbar-none">
+            <button onclick="filterCategory('all')" id="cat-all" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 transition-all shrink-0">All Tools (40)</button>
+            <button onclick="filterCategory('dev')" id="cat-dev" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white border border-slate-800 transition-all shrink-0">Developer Utils</button>
+            <button onclick="filterCategory('data')" id="cat-data" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white border border-slate-800 transition-all shrink-0">Data Formatters</button>
+            <button onclick="filterCategory('security')" id="cat-security" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white border border-slate-800 transition-all shrink-0">Security & Hash</button>
+            <button onclick="filterCategory('design')" id="cat-design" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white border border-slate-800 transition-all shrink-0">Design & Media</button>
+            <button onclick="filterCategory('text')" id="cat-text" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white border border-slate-800 transition-all shrink-0">Text & Converters</button>
+            <button onclick="filterCategory('math')" id="cat-math" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white border border-slate-800 transition-all shrink-0">Math & Calculators</button>
+        </div>
+
+        <!-- 40 Tools Grid -->
+        <div id="toolsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+
+            <!-- Tool 1: JSON Formatter & Validator -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="data" data-title="JSON Formatter & Validator">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#01</div>
+                            <h3 class="font-bold text-slate-100 text-lg">JSON Formatter & Validator</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Data</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Format, beautify, validate and minify raw JSON data instantly.</p>
+                    <textarea id="tool1-input" rows="4" placeholder="Paste JSON here..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs code-font text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 mb-3"></textarea>
+                    <div id="tool1-output-status" class="text-xs mb-3 font-medium"></div>
+                    <textarea id="tool1-output" rows="4" readonly placeholder="Output result..." class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs code-font text-indigo-300 focus:outline-none mb-4"></textarea>
+                </div>
+                <div class="flex items-center space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool1Process('beautify')" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-3 rounded-xl text-xs transition-all shadow-md shadow-indigo-600/20">Beautify</button>
+                    <button onclick="tool1Process('minify')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-2 px-3 rounded-xl text-xs transition-all">Minify</button>
+                    <button onclick="copyOutput('tool1-output')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-xl text-xs transition-all title='Copy'"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+
+            <!-- Tool 2: Base64 Encoder & Decoder -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="dev" data-title="Base64 Encoder & Decoder">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#02</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Base64 Encoder & Decoder</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Dev</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Encode plaintext to Base64 or decode Base64 back to text.</p>
+                    <textarea id="tool2-input" rows="4" placeholder="Enter text or Base64..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs code-font text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 mb-3"></textarea>
+                    <textarea id="tool2-output" rows="4" readonly placeholder="Result output..." class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs code-font text-indigo-300 focus:outline-none mb-4"></textarea>
+                </div>
+                <div class="flex items-center space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool2Process('encode')" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-3 rounded-xl text-xs transition-all shadow-md shadow-indigo-600/20">Encode</button>
+                    <button onclick="tool2Process('decode')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-2 px-3 rounded-xl text-xs transition-all">Decode</button>
+                    <button onclick="copyOutput('tool2-output')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-xl text-xs transition-all"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+
+            <!-- Tool 3: URL Encoder & Decoder -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="dev" data-title="URL Encoder & Decoder">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#03</div>
+                            <h3 class="font-bold text-slate-100 text-lg">URL Encoder & Decoder</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Dev</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Safely encode special characters for URLs or decode URI components.</p>
+                    <textarea id="tool3-input" rows="4" placeholder="Enter URL string..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs code-font text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 mb-3"></textarea>
+                    <textarea id="tool3-output" rows="4" readonly placeholder="Result output..." class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs code-font text-indigo-300 focus:outline-none mb-4"></textarea>
+                </div>
+                <div class="flex items-center space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool3Process('encode')" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-3 rounded-xl text-xs transition-all shadow-md shadow-indigo-600/20">Encode URL</button>
+                    <button onclick="tool3Process('decode')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-2 px-3 rounded-xl text-xs transition-all">Decode URL</button>
+                    <button onclick="copyOutput('tool3-output')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-xl text-xs transition-all"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+
+            <!-- Tool 4: JWT Token Decoder -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="security" data-title="JWT Token Decoder">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#04</div>
+                            <h3 class="font-bold text-slate-100 text-lg">JWT Token Decoder</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Security</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Inspect header and payload claims of JSON Web Tokens instantly.</p>
+                    <textarea id="tool4-input" rows="3" placeholder="Paste JWT token (ey...)..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs code-font text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 mb-3"></textarea>
+                    <textarea id="tool4-output" rows="5" readonly placeholder="Decoded header & payload..." class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs code-font text-indigo-300 focus:outline-none mb-4"></textarea>
+                </div>
+                <div class="flex items-center space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool4Decode()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-3 rounded-xl text-xs transition-all shadow-md shadow-indigo-600/20">Decode JWT</button>
+                    <button onclick="copyOutput('tool4-output')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-xl text-xs transition-all"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+
+            <!-- Tool 5: MD5 & SHA Hash Generator -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="security" data-title="MD5 & SHA Hash Generator">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#05</div>
+                            <h3 class="font-bold text-slate-100 text-lg">MD5 & SHA Hash Generator</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Security</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Generate cryptographic hashes (SHA-256, SHA-512) securely in browser.</p>
+                    <input type="text" id="tool5-input" oninput="tool5Hash()" placeholder="Enter string to hash..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs code-font text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 mb-3">
+                    <div class="space-y-2 text-xs code-font">
+                        <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <span class="text-slate-500 mr-2">SHA-256:</span>
+                            <span id="tool5-sha256" class="truncate text-indigo-300 select-all"></span>
+                        </div>
+                        <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <span class="text-slate-500 mr-2">SHA-512:</span>
+                            <span id="tool5-sha512" class="truncate text-indigo-300 select-all"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-4 border-t border-slate-800 mt-4 flex justify-end">
+                    <button onclick="tool5Hash()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-4 rounded-xl text-xs transition-all shadow-md shadow-indigo-600/20">Generate Hashes</button>
+                </div>
+            </div>
+
+            <!-- Tool 6: UUID v4 Generator -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="dev" data-title="UUID v4 Generator">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#06</div>
+                            <h3 class="font-bold text-slate-100 text-lg">UUID v4 Generator</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Dev</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Generate bulk unique universally unique identifiers (UUIDs).</p>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <label class="text-xs text-slate-400">Quantity:</label>
+                        <input type="number" id="tool6-count" value="5" min="1" max="50" class="w-20 bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-200 text-center">
+                    </div>
+                    <textarea id="tool6-output" rows="4" readonly placeholder="Generated UUIDs..." class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs code-font text-indigo-300 focus:outline-none mb-4"></textarea>
+                </div>
+                <div class="flex items-center space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool6Generate()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-3 rounded-xl text-xs transition-all shadow-md shadow-indigo-600/20">Generate UUIDs</button>
+                    <button onclick="copyOutput('tool6-output')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-xl text-xs transition-all"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+
+            <!-- Tool 7: Password Generator -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="security" data-title="Secure Password Generator">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#07</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Secure Password Generator</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Security</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Create robust, cryptographically strong passwords with custom rules.</p>
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 mb-4 flex items-center justify-between">
+                        <span id="tool7-output" class="code-font text-sm text-indigo-300 font-bold select-all">Click Generate</span>
+                        <button onclick="copyOutput('tool7-output')" class="text-slate-400 hover:text-white"><i class="fa-regular fa-copy"></i></button>
+                    </div>
+                    <div class="space-y-2 text-xs text-slate-300">
+                        <div class="flex items-center justify-between">
+                            <span>Length: <span id="tool7-len-val">16</span></span>
+                            <input type="range" id="tool7-length" min="8" max="64" value="16" oninput="document.getElementById('tool7-len-val').innerText=this.value" class="w-36 accent-indigo-500">
+                        </div>
+                        <div class="flex items-center space-x-4 pt-1">
+                            <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" id="tool7-upper" checked class="accent-indigo-500"> <span>A-Z</span></label>
+                            <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" id="tool7-lower" checked class="accent-indigo-500"> <span>a-z</span></label>
+                            <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" id="tool7-nums" checked class="accent-indigo-500"> <span>0-9</span></label>
+                            <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" id="tool7-symbols" checked class="accent-indigo-500"> <span>#$@</span></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-4 border-t border-slate-800 mt-4">
+                    <button onclick="tool7Generate()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-4 rounded-xl text-xs transition-all shadow-md shadow-indigo-600/20">Generate Password</button>
+                </div>
+            </div>
+
+            <!-- Tool 8: CSS Box Shadow Generator -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="design" data-title="CSS Box Shadow Generator">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#08</div>
+                            <h3 class="font-bold text-slate-100 text-lg">CSS Box Shadow Generator</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Design</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Design smooth card shadows visually and copy CSS snippet.</p>
+                    <div class="h-24 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center mb-4">
+                        <div id="tool8-box" class="w-16 h-16 bg-indigo-600 rounded-xl transition-all"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-slate-400 mb-3">
+                        <div>Blur: <input type="range" id="tool8-blur" min="0" max="50" value="15" oninput="tool8Update()" class="w-full accent-indigo-500"></div>
+                        <div>Spread: <input type="range" id="tool8-spread" min="-20" max="30" value="0" oninput="tool8Update()" class="w-full accent-indigo-500"></div>
+                    </div>
+                    <textarea id="tool8-output" rows="2" readonly class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-2.5 text-xs code-font text-indigo-300 mb-4"></textarea>
+                </div>
+                <div class="flex justify-end pt-2 border-t border-slate-800">
+                    <button onclick="copyOutput('tool8-output')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-4 rounded-xl text-xs transition-all shadow-md shadow-indigo-600/20">Copy CSS</button>
+                </div>
+            </div>
+
+            <!-- Tool 9: Color Palette Generator & Converter -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="design" data-title="Color Palette Generator & Converter">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#09</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Color Converter & Swatches</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Design</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Convert HEX, RGB, and HSL color values instantly.</p>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <input type="color" id="tool9-picker" value="#6366f1" oninput="tool9Convert()" class="w-12 h-10 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer">
+                        <input type="text" id="tool9-hex" value="#6366f1" oninput="tool9ConvertHex()" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs code-font text-slate-200">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs code-font bg-slate-950 p-3 rounded-xl border border-slate-800 mb-4">
+                        <div>RGB: <span id="tool9-rgb" class="text-indigo-300"></span></div>
+                        <div>HSL: <span id="tool9-hsl" class="text-indigo-300"></span></div>
+                    </div>
+                </div>
+                <div class="pt-2 border-t border-slate-800 flex justify-end">
+                    <button onclick="copyOutput('tool9-hex')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-4 rounded-xl text-xs transition-all">Copy HEX</button>
+                </div>
+            </div>
+
+            <!-- Tool 10: QR Code Generator -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="design" data-title="QR Code Generator">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#10</div>
+                            <h3 class="font-bold text-slate-100 text-lg">QR Code Generator</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Design</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Generate QR codes for text, links, or WiFi instantly using secure API.</p>
+                    <input type="text" id="tool10-input" placeholder="Enter URL or text..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 mb-4">
+                    <div class="flex justify-center mb-4 bg-slate-950 p-3 rounded-xl border border-slate-800">
+                        <img id="tool10-img" src="" alt="QR Code" class="w-32 h-32 hidden rounded-lg">
+                        <span id="tool10-placeholder" class="text-xs text-slate-500 py-10">QR code will appear here</span>
+                    </div>
+                </div>
+                <div class="flex space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool10Generate()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-3 rounded-xl text-xs transition-all shadow-md shadow-indigo-600/20">Generate QR</button>
+                    <a id="tool10-download" download="qrcode.png" class="hidden bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2 rounded-xl text-xs font-medium items-center justify-center"><i class="fa-solid fa-download"></i></a>
+                </div>
+            </div>
+
+            <!-- Tool 11: Markdown Live Previewer -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="text" data-title="Markdown Live Previewer">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#11</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Markdown Live Previewer</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Text</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Write and preview markdown formatting instantly.</p>
+                    <textarea id="tool11-input" rows="4" oninput="tool11Preview()" placeholder="# Heading\nWrite markdown here..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs code-font text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 mb-3"># Hello OmniDev
+**Bold text**, *italic text*, and `code` snippets.</textarea>
+                    <div id="tool11-output" class="w-full h-28 bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs text-slate-300 overflow-y-auto mb-4"></div>
+                </div>
+                <div class="flex justify-end pt-2 border-t border-slate-800">
+                    <button onclick="copyOutput('tool11-input')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-4 rounded-xl text-xs transition-all">Copy Markdown</button>
+                </div>
+            </div>
+
+            <!-- Tool 12: HTML Entity Encoder/Decoder -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="dev" data-title="HTML Entity Encoder & Decoder">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#12</div>
+                            <h3 class="font-bold text-slate-100 text-lg">HTML Entity Encoder</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Dev</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Escape or unescape HTML tags and special characters.</p>
+                    <textarea id="tool12-input" rows="3" placeholder="Enter HTML..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs code-font text-slate-200 mb-3"></textarea>
+                    <textarea id="tool12-output" rows="3" readonly placeholder="Result..." class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs code-font text-indigo-300 mb-4"></textarea>
+                </div>
+                <div class="flex space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool12Process('encode')" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-3 rounded-xl text-xs">Escape</button>
+                    <button onclick="tool12Process('decode')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-2 px-3 rounded-xl text-xs">Unescape</button>
+                    <button onclick="copyOutput('tool12-output')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-xl text-xs"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+
+            <!-- Tool 13: Unix Timestamp Converter -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="dev" data-title="Unix Timestamp Converter">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#13</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Unix Timestamp Converter</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Dev</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Convert Epoch timestamps to human-readable dates and vice versa.</p>
+                    <input type="text" id="tool13-input" placeholder="Enter timestamp or date..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs code-font text-slate-200 mb-3">
+                    <div id="tool13-output" class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs code-font text-indigo-300 mb-4 min-h-[50px]">Current Epoch: <span id="tool13-current"></span></div>
+                </div>
+                <div class="flex space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool13Convert('toHuman')" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-3 rounded-xl text-xs">To Date</button>
+                    <button onclick="tool13Convert('toEpoch')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-2 px-3 rounded-xl text-xs">To Epoch</button>
+                </div>
+            </div>
+
+            <!-- Tool 14: Text Case & Slug Converter -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="text" data-title="Text Case & Slug Converter">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#14</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Text Case & Slug Converter</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Text</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Convert text to camelCase, snake_case, kebab-case, or URL slug.</p>
+                    <textarea id="tool14-input" rows="3" placeholder="Enter text..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 mb-3"></textarea>
+                    <textarea id="tool14-output" rows="3" readonly class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs code-font text-indigo-300 mb-4"></textarea>
+                </div>
+                <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool14Process('camel')" class="bg-indigo-600 hover:bg-indigo-500 text-white py-1.5 px-2 rounded-lg text-xs">Camel</button>
+                    <button onclick="tool14Process('snake')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 px-2 rounded-lg text-xs">Snake</button>
+                    <button onclick="tool14Process('kebab')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 px-2 rounded-lg text-xs">Kebab</button>
+                </div>
+            </div>
+
+            <!-- Tool 15: Lorem Ipsum Generator -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="text" data-title="Lorem Ipsum Generator">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#15</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Lorem Ipsum Generator</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Text</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Generate placeholder paragraphs for your mockups and designs.</p>
+                    <div class="flex items-center space-x-3 mb-3">
+                        <label class="text-xs text-slate-400">Paragraphs:</label>
+                        <input type="number" id="tool15-count" value="3" min="1" max="10" class="w-20 bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-200 text-center">
+                    </div>
+                    <textarea id="tool15-output" rows="4" readonly class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs text-slate-300 mb-4"></textarea>
+                </div>
+                <div class="flex space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool15Generate()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-3 rounded-xl text-xs">Generate Text</button>
+                    <button onclick="copyOutput('tool15-output')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-xl text-xs"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+
+            <!-- Tool 16: XML to JSON Converter -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="data" data-title="XML to JSON Converter">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#16</div>
+                            <h3 class="font-bold text-slate-100 text-lg">XML to JSON Converter</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Data</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Convert XML payloads to structured JSON objects.</p>
+                    <textarea id="tool16-input" rows="3" placeholder="<note><to>Tofael</to></note>" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs code-font text-slate-200 mb-3"></textarea>
+                    <textarea id="tool16-output" rows="3" readonly class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs code-font text-indigo-300 mb-4"></textarea>
+                </div>
+                <div class="flex space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool16Convert()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-3 rounded-xl text-xs">Convert to JSON</button>
+                    <button onclick="copyOutput('tool16-output')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-xl text-xs"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+
+            <!-- Tool 17: CSV to JSON Converter -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="data" data-title="CSV to JSON Converter">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#17</div>
+                            <h3 class="font-bold text-slate-100 text-lg">CSV to JSON Converter</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Data</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Transform comma-separated spreadsheet data into clean JSON arrays.</p>
+                    <textarea id="tool17-input" rows="3" placeholder="name,age\nTamim,25" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs code-font text-slate-200 mb-3"></textarea>
+                    <textarea id="tool17-output" rows="3" readonly class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs code-font text-indigo-300 mb-4"></textarea>
+                </div>
+                <div class="flex space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool17Convert()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-3 rounded-xl text-xs">Convert CSV</button>
+                    <button onclick="copyOutput('tool17-output')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-xl text-xs"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+
+            <!-- Tool 18: Regex Tester & Matcher -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="dev" data-title="Regex Tester & Matcher">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#18</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Regex Tester & Matcher</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Dev</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Test regular expressions against test strings with live highlighting.</p>
+                    <input type="text" id="tool18-pattern" placeholder="Pattern (e.g., \d+)" oninput="tool18Test()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs code-font text-slate-200 mb-2">
+                    <textarea id="tool18-input" rows="2" placeholder="Test string..." oninput="tool18Test()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs code-font text-slate-200 mb-2"></textarea>
+                    <div id="tool18-output" class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-xs code-font text-indigo-300 mb-4 min-h-[40px]">Matches found: 0</div>
+                </div>
+                <div class="pt-2 border-t border-slate-800 flex justify-end">
+                    <button onclick="tool18Test()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-4 rounded-xl text-xs">Test Regex</button>
+                </div>
+            </div>
+
+            <!-- Tool 19: Character & Word Counter -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="text" data-title="Character & Word Counter">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#19</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Character & Word Counter</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Text</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Count words, characters, sentences, and reading time.</p>
+                    <textarea id="tool19-input" rows="4" oninput="tool19Count()" placeholder="Type or paste text..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 mb-3"></textarea>
+                    <div class="grid grid-cols-3 gap-2 text-center text-xs code-font">
+                        <div class="bg-slate-950 p-2 rounded-xl border border-slate-800"><span id="tool19-words" class="block font-bold text-indigo-400 text-sm">0</span>Words</div>
+                        <div class="bg-slate-950 p-2 rounded-xl border border-slate-800"><span id="tool19-chars" class="block font-bold text-indigo-400 text-sm">0</span>Chars</div>
+                        <div class="bg-slate-950 p-2 rounded-xl border border-slate-800"><span id="tool19-reading" class="block font-bold text-indigo-400 text-sm">0s</span>Read Time</div>
+                    </div>
+                </div>
+                <div class="pt-4 border-t border-slate-800 mt-4 flex justify-end">
+                    <button onclick="copyOutput('tool19-input')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-4 rounded-xl text-xs">Copy Text</button>
+                </div>
+            </div>
+
+            <!-- Tool 20: Diff Checker (Text Comparison) -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="dev" data-title="Diff Checker">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#20</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Diff Checker</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Dev</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Compare two texts to identify differences.</p>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <textarea id="tool20-old" rows="3" placeholder="Original..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs code-font text-slate-200"></textarea>
+                        <textarea id="tool20-new" rows="3" placeholder="Modified..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs code-font text-slate-200"></textarea>
+                    </div>
+                    <div id="tool20-output" class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs code-font text-indigo-300 mb-4 min-h-[45px]">Enter texts to compare.</div>
+                </div>
+                <div class="pt-2 border-t border-slate-800 flex justify-end">
+                    <button onclick="tool20Compare()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-4 rounded-xl text-xs">Compare Texts</button>
+                </div>
+            </div>
+
+            <!-- Tool 21: CSS Gradient Generator -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="design" data-title="CSS Gradient Generator">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#21</div>
+                            <h3 class="font-bold text-slate-100 text-lg">CSS Gradient Generator</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Design</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Create stunning linear gradients with color pickers.</p>
+                    <div id="tool21-preview" class="h-20 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-xl mb-4 border border-slate-800"></div>
+                    <div class="flex items-center space-x-2 mb-3">
+                        <input type="color" id="tool21-c1" value="#6366f1" oninput="tool21Update()" class="w-10 h-8 bg-slate-950 border border-slate-800 rounded-lg">
+                        <input type="color" id="tool21-c2" value="#8b5cf6" oninput="tool21Update()" class="w-10 h-8 bg-slate-950 border border-slate-800 rounded-lg">
+                        <select id="tool21-dir" onchange="tool21Update()" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-xs text-slate-200">
+                            <option value="to right">To Right</option>
+                            <option value="to bottom">To Bottom</option>
+                            <option value="to bottom right">Diagonal</option>
+                        </select>
+                    </div>
+                    <textarea id="tool21-output" rows="2" readonly class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-2 text-xs code-font text-indigo-300 mb-4"></textarea>
+                </div>
+                <div class="pt-2 border-t border-slate-800 flex justify-end">
+                    <button onclick="copyOutput('tool21-output')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-4 rounded-xl text-xs">Copy Gradient CSS</button>
+                </div>
+            </div>
+
+            <!-- Tool 22: Placeholder Image Generator -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="design" data-title="Placeholder Image Generator">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#22</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Placeholder Image Generator</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Design</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Generate custom dimension placeholder image URLs.</p>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <input type="number" id="tool22-w" value="600" placeholder="Width" class="bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200">
+                        <input type="number" id="tool22-h" value="400" placeholder="Height" class="bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200">
+                    </div>
+                    <input type="text" id="tool22-output" readonly class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-2.5 text-xs code-font text-indigo-300 mb-4 select-all">
+                </div>
+                <div class="flex space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool22Generate()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-3 rounded-xl text-xs">Generate URL</button>
+                    <button onclick="copyOutput('tool22-output')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-xl text-xs"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+
+            <!-- Tool 23: Image Resizer & Compressor -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="design" data-title="Image Resizer & Compressor">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#23</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Image Resizer & Compressor</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Design</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Upload an image to resize dimensions and compress instantly.</p>
+                    <input type="file" id="tool23-file" accept="image/*" onchange="tool23Load(event)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-400 mb-3">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <label class="text-xs text-slate-400">Max Width:</label>
+                        <input type="number" id="tool23-width" value="800" class="w-24 bg-slate-950 border border-slate-800 rounded-xl p-1.5 text-xs text-slate-200">
+                    </div>
+                    <div id="tool23-status" class="text-xs text-indigo-300 mb-4"></div>
+                </div>
+                <div class="flex space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool23Process()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-3 rounded-xl text-xs">Compress & Download</button>
+                </div>
+            </div>
+
+            <!-- Tool 24: ASCII Text Art Generator -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="text" data-title="ASCII Text Art Generator">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#24</div>
+                            <h3 class="font-bold text-slate-100 text-lg">ASCII Text Art Generator</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Text</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Convert text into big banner ASCII text art.</p>
+                    <input type="text" id="tool24-input" value="OMNIDEV" oninput="tool24Generate()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs code-font text-slate-200 mb-3">
+                    <textarea id="tool24-output" rows="4" readonly class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs code-font text-indigo-300 mb-4 whitespace-pre overflow-x-auto"></textarea>
+                </div>
+                <div class="flex justify-end pt-2 border-t border-slate-800">
+                    <button onclick="copyOutput('tool24-output')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-4 rounded-xl text-xs">Copy ASCII Art</button>
+                </div>
+            </div>
+
+            <!-- Tool 25: Case Formatter (Upper, Lower, Title) -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="text" data-title="Advanced Text Case Formatter">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#25</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Advanced Text Formatter</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Text</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Convert text cases to uppercase, lowercase, sentence, or title case.</p>
+                    <textarea id="tool25-input" rows="3" placeholder="Enter text..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 mb-3"></textarea>
+                    <textarea id="tool25-output" rows="3" readonly class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs text-slate-300 mb-4"></textarea>
+                </div>
+                <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool25Process('upper')" class="bg-indigo-600 hover:bg-indigo-500 text-white py-1.5 rounded-lg text-xs">UPPER</button>
+                    <button onclick="tool25Process('lower')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 rounded-lg text-xs">lower</button>
+                    <button onclick="tool25Process('title')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 rounded-lg text-xs">Title</button>
+                </div>
+            </div>
+
+            <!-- Tool 26: String Repeater & Reverse -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="text" data-title="String Repeater & Reverse">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#26</div>
+                            <h3 class="font-bold text-slate-100 text-lg">String Repeater & Reverse</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Text</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Repeat or reverse strings with custom separators.</p>
+                    <input type="text" id="tool26-input" placeholder="String to repeat..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 mb-2">
+                    <div class="flex space-x-2 mb-3">
+                        <input type="number" id="tool26-times" value="3" min="1" max="100" class="w-20 bg-slate-950 border border-slate-800 rounded-xl p-1.5 text-xs text-slate-200 text-center">
+                        <input type="text" id="tool26-sep" value=" " placeholder="Separator" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-1.5 text-xs text-slate-200">
+                    </div>
+                    <textarea id="tool26-output" rows="3" readonly class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs code-font text-indigo-300 mb-4"></textarea>
+                </div>
+                <div class="flex space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool26Process('repeat')" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-3 rounded-xl text-xs">Repeat</button>
+                    <button onclick="tool26Process('reverse')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-1.5 px-3 rounded-xl text-xs">Reverse</button>
+                </div>
+            </div>
+
+            <!-- Tool 27: List Sorter & Remover -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="text" data-title="List Sorter & Deduplicator">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#27</div>
+                            <h3 class="font-bold text-slate-100 text-lg">List Sorter & Deduplicator</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Text</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Sort lines alphabetically, reverse sort, or remove duplicates.</p>
+                    <textarea id="tool27-input" rows="3" placeholder="Apple\nBanana\nApple" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 mb-3"></textarea>
+                    <textarea id="tool27-output" rows="3" readonly class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs text-slate-300 mb-4"></textarea>
+                </div>
+                <div class="flex space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool27Process('sort')" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-1.5 px-2 rounded-xl text-xs">Sort A-Z</button>
+                    <button onclick="tool27Process('unique')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 px-2 rounded-xl text-xs">Unique</button>
+                    <button onclick="copyOutput('tool27-output')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-xl text-xs"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+
+            <!-- Tool 28: Base Converter (Decimal, Hex, Binary) -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="math" data-title="Number Base Converter">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#28</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Number Base Converter</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Math</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Convert numbers between Decimal, Binary, Octal, and Hexadecimal.</p>
+                    <input type="text" id="tool28-input" placeholder="Enter number..." oninput="tool28Convert()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs code-font text-slate-200 mb-3">
+                    <div class="space-y-2 text-xs code-font bg-slate-950 p-3 rounded-xl border border-slate-800 mb-4">
+                        <div>Dec: <span id="tool28-dec" class="text-indigo-300">0</span></div>
+                        <div>Bin: <span id="tool28-bin" class="text-indigo-300">0</span></div>
+                        <div>Hex: <span id="tool28-hex" class="text-indigo-300">0</span></div>
+                        <div>Oct: <span id="tool28-oct" class="text-indigo-300">0</span></div>
+                    </div>
+                </div>
+                <div class="pt-2 border-t border-slate-800 flex justify-end">
+                    <button onclick="tool28Convert()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-4 rounded-xl text-xs">Convert Bases</button>
+                </div>
+            </div>
+
+            <!-- Tool 29: Percentage Calculator -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="math" data-title="Percentage Calculator">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#29</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Percentage Calculator</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Math</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Calculate percentage increase, decrease, or part of a whole.</p>
+                    <div class="space-y-2 text-xs mb-4">
+                        <div class="flex items-center space-x-2">
+                            <input type="number" id="tool29-p" placeholder="X%" oninput="tool29Calc()" class="w-1/2 bg-slate-950 border border-slate-800 rounded-xl p-2 text-slate-200">
+                            <span class="text-slate-400">of</span>
+                            <input type="number" id="tool29-y" placeholder="Y" oninput="tool29Calc()" class="w-1/2 bg-slate-950 border border-slate-800 rounded-xl p-2 text-slate-200">
+                        </div>
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-center text-indigo-300 font-bold" id="tool29-output">Result: 0</div>
+                    </div>
+                </div>
+                <div class="pt-2 border-t border-slate-800 flex justify-end">
+                    <button onclick="tool29Calc()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-4 rounded-xl text-xs">Calculate</button>
+                </div>
+            </div>
+
+            <!-- Tool 30: Age & Date Calculator -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="math" data-title="Age & Date Calculator">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#30</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Age & Date Calculator</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Math</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Calculate exact years, months, and days between dates.</p>
+                    <input type="date" id="tool30-date" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 mb-3">
+                    <div id="tool30-output" class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs text-indigo-300 mb-4 font-medium">Select birthdate.</div>
+                </div>
+                <div class="pt-2 border-t border-slate-800 flex justify-end">
+                    <button onclick="tool30Calc()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-4 rounded-xl text-xs">Calculate Age</button>
+                </div>
+            </div>
+
+            <!-- Tool 31: Data Storage Unit Converter -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="math" data-title="Data Storage Converter">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#31</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Data Storage Converter</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Math</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Convert bytes, KB, MB, GB, and TB storage units.</p>
+                    <div class="flex space-x-2 mb-3">
+                        <input type="number" id="tool31-val" value="1024" oninput="tool31Convert()" class="w-1/2 bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200">
+                        <select id="tool31-unit" onchange="tool31Convert()" class="w-1/2 bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200">
+                            <option value="B">Bytes</option>
+                            <option value="KB">KB</option>
+                            <option value="MB" selected>MB</option>
+                            <option value="GB">GB</option>
+                            <option value="TB">TB</option>
+                        </select>
+                    </div>
+                    <div id="tool31-output" class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs code-font text-indigo-300 mb-4">Calculated values...</div>
+                </div>
+                <div class="pt-2 border-t border-slate-800 flex justify-end">
+                    <button onclick="tool31Convert()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-4 rounded-xl text-xs">Convert Units</button>
+                </div>
+            </div>
+
+            <!-- Tool 32: Aspect Ratio Calculator -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="math" data-title="Aspect Ratio Calculator">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#32</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Aspect Ratio Calculator</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Math</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Calculate proportional screen dimensions for 16:9, 4:3, etc.</p>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <input type="number" id="tool32-w" value="1920" oninput="tool32Calc('w')" placeholder="Width" class="bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200">
+                        <input type="number" id="tool32-h" value="1080" oninput="tool32Calc('h')" placeholder="Height" class="bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200">
+                    </div>
+                    <div id="tool32-output" class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs text-indigo-300 mb-4 font-medium">Aspect Ratio: 16:9</div>
+                </div>
+                <div class="pt-2 border-t border-slate-800 flex justify-end">
+                    <button onclick="tool32Calc('w')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-4 rounded-xl text-xs">Calculate Ratio</button>
+                </div>
+            </div>
+
+            <!-- Tool 33: CSS Unit Converter (PX to REM) -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="dev" data-title="CSS PX to REM Converter">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#33</div>
+                            <h3 class="font-bold text-slate-100 text-lg">CSS PX to REM Converter</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Dev</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Convert pixels to REM units based on base font size.</p>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <input type="number" id="tool33-px" value="16" oninput="tool33Convert()" placeholder="Pixels" class="bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200">
+                        <input type="number" id="tool33-base" value="16" oninput="tool33Convert()" placeholder="Base PX" class="bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200">
+                    </div>
+                    <div id="tool33-output" class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs code-font text-indigo-300 mb-4">1.00 REM</div>
+                </div>
+                <div class="pt-2 border-t border-slate-800 flex justify-end">
+                    <button onclick="copyOutput('tool33-output')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-4 rounded-xl text-xs">Copy REM</button>
+                </div>
+            </div>
+
+            <!-- Tool 34: IP Address & Network Info Inspector -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="security" data-title="Client IP & Browser Inspector">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#34</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Browser & Client Inspector</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Security</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Inspect user agent, screen resolution, and connection info.</p>
+                    <div id="tool34-output" class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs code-font text-indigo-300 mb-4 space-y-1">
+                        <div>Loading browser info...</div>
+                    </div>
+                </div>
+                <div class="pt-2 border-t border-slate-800 flex justify-end">
+                    <button onclick="tool34Load()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-4 rounded-xl text-xs">Refresh Info</button>
+                </div>
+            </div>
+
+            <!-- Tool 35: Stopwatch & Timer -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="math" data-title="Stopwatch & Timer">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#35</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Stopwatch & Timer</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Math</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Accurate web stopwatch for tracking time intervals.</p>
+                    <div id="tool35-display" class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center text-2xl font-bold code-font text-indigo-300 mb-4">00:00:00</div>
+                </div>
+                <div class="flex space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool35Start()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-1.5 rounded-xl text-xs">Start</button>
+                    <button onclick="tool35Stop()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 rounded-xl text-xs">Pause</button>
+                    <button onclick="tool35Reset()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 px-3 rounded-xl text-xs">Reset</button>
+                </div>
+            </div>
+
+            <!-- Tool 36: Text Statistics Analyzer -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="text" data-title="Text Statistics Analyzer">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#36</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Text Statistics Analyzer</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Text</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Analyze paragraphs for lines, words, paragraphs, and average word length.</p>
+                    <textarea id="tool36-input" rows="3" oninput="tool36Analyze()" placeholder="Paste text here..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 mb-3"></textarea>
+                    <div id="tool36-output" class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs code-font text-indigo-300 mb-4">Lines: 0 | Avg Word Length: 0</div>
+                </div>
+                <div class="pt-2 border-t border-slate-800 flex justify-end">
+                    <button onclick="tool36Analyze()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-4 rounded-xl text-xs">Analyze</button>
+                </div>
+            </div>
+
+            <!-- Tool 37: Random Number Generator -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="math" data-title="Random Number Generator">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#37</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Random Number Generator</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Math</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Generate secure random numbers within specified range.</p>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <input type="number" id="tool37-min" value="1" placeholder="Min" class="bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200">
+                        <input type="number" id="tool37-max" value="100" placeholder="Max" class="bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200">
+                    </div>
+                    <div id="tool37-output" class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-center text-xl font-bold code-font text-indigo-300 mb-4">--</div>
+                </div>
+                <div class="pt-2 border-t border-slate-800 flex justify-end">
+                    <button onclick="tool37Generate()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-4 rounded-xl text-xs">Generate Number</button>
+                </div>
+            </div>
+
+            <!-- Tool 38: JSON Minifier & Beautifier -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="data" data-title="JSON Minifier & Beautifier">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#38</div>
+                            <h3 class="font-bold text-slate-100 text-lg">JSON Compact & Expand</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Data</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Quickly strip whitespace or expand compressed JSON strings.</p>
+                    <textarea id="tool38-input" rows="3" placeholder="JSON..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs code-font text-slate-200 mb-3"></textarea>
+                    <textarea id="tool38-output" rows="3" readonly class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs code-font text-indigo-300 mb-4"></textarea>
+                </div>
+                <div class="flex space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool38Process('expand')" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-3 rounded-xl text-xs">Expand</button>
+                    <button onclick="tool38Process('compact')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-1.5 px-3 rounded-xl text-xs">Compact</button>
+                    <button onclick="copyOutput('tool38-output')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-xl text-xs"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+
+            <!-- Tool 39: String Escaper for Code -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="dev" data-title="String Escaper for Code">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#39</div>
+                            <h3 class="font-bold text-slate-100 text-lg">String Escaper for Code</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Dev</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Escape quotes and newlines for embedding strings in code variables.</p>
+                    <textarea id="tool39-input" rows="3" placeholder="Enter string..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs code-font text-slate-200 mb-3"></textarea>
+                    <textarea id="tool39-output" rows="3" readonly class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs code-font text-indigo-300 mb-4"></textarea>
+                </div>
+                <div class="flex space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool39Escape()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-3 rounded-xl text-xs">Escape String</button>
+                    <button onclick="copyOutput('tool39-output')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-xl text-xs"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+
+            <!-- Tool 40: OmniDev Hash & Keyring Generator -->
+            <div class="tool-card bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-indigo-500/50 transition-all flex flex-col justify-between" data-category="security" data-title="OmniDev Master Key & Token Generator">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">#40</div>
+                            <h3 class="font-bold text-slate-100 text-lg">Master Key & Token Generator</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-indigo-300 font-mono">Security</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4">Generate 256-bit Hex API keys and high-entropy secrets instantly.</p>
+                    <textarea id="tool40-output" rows="4" readonly placeholder="Click generate for secure master key..." class="w-full bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-xs code-font text-indigo-300 mb-4"></textarea>
+                </div>
+                <div class="flex space-x-2 pt-2 border-t border-slate-800">
+                    <button onclick="tool40Generate()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-1.5 px-3 rounded-xl text-xs">Generate Master Key</button>
+                    <button onclick="copyOutput('tool40-output')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-xl text-xs"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Support Creator Section -->
+        <section class="mt-16 bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-indigo-500/30 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="max-w-3xl mx-auto text-center relative z-10">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-indigo-600 text-white text-2xl font-bold shadow-xl shadow-indigo-600/40 mb-4">
+                    <i class="fa-solid fa-heart text-rose-400"></i>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-3">Support Creator & Developer</h2>
+                <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+                    OmniDev Suite is meticulously crafted and maintained by <span class="text-indigo-400 font-bold">Tamim Rahman</span>. If this developer hub speeds up your workflow, consider supporting the creator!
+                </p>
+                <div class="inline-flex flex-col sm:flex-row items-center justify-center gap-4 bg-slate-950/80 border border-slate-800 p-4 rounded-2xl shadow-inner">
+                    <div class="flex items-center space-x-3 px-2">
+                        <i class="fa-solid fa-wallet text-indigo-400 text-xl"></i>
+                        <div class="text-left">
+                            <div class="text-xs text-slate-400 font-medium">bKash / Nagad / Rocket (Personal)</div>
+                            <div id="creatorNumber" class="text-lg font-bold code-font text-white select-all">01762324527</div>
+                        </div>
+                    </div>
+                    <button onclick="copyCreatorNumber()" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-6 rounded-xl text-xs transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center space-x-2">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>Copy Number</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500">
+        <p>&copy; 2026 OmniDev Suite. Built with passion by Tamim Rahman. 100% Client-Side Executable.</p>
+    </footer>
+
+    <!-- JavaScript Application Logic for all 40 Tools -->
+    <script>
+        // Toast Notification Function
+        function showToast(msg = "Copied to clipboard successfully!") {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toastMessage');
+            msgEl.innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2500);
+        }
+
+        // Generic Copy Output Helper
+        function copyOutput(elementId) {
+            const el = document.getElementById(elementId);
+            const text = el.value || el.innerText;
+            if (!text) {
+                showToast("Nothing to copy!");
+                return;
+            }
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("Copied to clipboard!");
+            });
+        }
+
+        // Copy Creator Number
+        function copyCreatorNumber() {
+            navigator.clipboard.writeText("01762324527").then(() => {
+                showToast("Creator bKash/Nagad number copied: 01762324527");
+            });
+        }
+
+        // Live Search Filtering
+        function filterTools() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            document.getElementById('mobileSearchInput').value = query;
+            applyFilter(query);
+        }
+
+        function filterToolsMobile() {
+            const query = document.getElementById('mobileSearchInput').value.toLowerCase();
+            document.getElementById('searchInput').value = query;
+            applyFilter(query);
+        }
+
+        function applyFilter(query) {
+            const cards = document.querySelectorAll('.tool-card');
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title').toLowerCase();
+                if (title.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Category Filter
+        function filterCategory(cat) {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
+                btn.classList.add('bg-slate-900', 'text-slate-400', 'border', 'border-slate-800');
+            });
+            const activeBtn = document.getElementById('cat-' + cat);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-slate-900', 'text-slate-400', 'border', 'border-slate-800');
+                activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
+            }
+            const cards = document.querySelectorAll('.tool-card');
+            cards.forEach(card => {
+                if (cat === 'all' || card.getAttribute('data-category') === cat) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        /* --- STREAMING_CHUNK:Implementing individual tool handlers --- */
+
+        // Tool 1: JSON Formatter
+        function tool1Process(mode) {
+            const input = document.getElementById('tool1-input').value;
+            const statusEl = document.getElementById('tool1-output-status');
+            const outputEl = document.getElementById('tool1-output');
+            try {
+                if (!input) return;
+                const parsed = JSON.parse(input);
+                if (mode === 'beautify') {
+                    outputEl.value = JSON.stringify(parsed, null, 4);
+                } else {
+                    outputEl.value = JSON.stringify(parsed);
+                }
+                statusEl.innerHTML = '<span class="text-emerald-400"><i class="fa-solid fa-check-circle mr-1"></i> Valid JSON</span>';
+            } catch (e) {
+                statusEl.innerHTML = '<span class="text-rose-400"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Invalid JSON: ' + e.message + '</span>';
+                outputEl.value = '';
+            }
+        }
+
+        // Tool 2: Base64
+        function tool2Process(mode) {
+            const input = document.getElementById('tool2-input').value;
+            const outputEl = document.getElementById('tool2-output');
+            try {
+                if (mode === 'encode') {
+                    outputEl.value = btoa(unescape(encodeURIComponent(input)));
+                } else {
+                    outputEl.value = decodeURIComponent(escape(atob(input)));
+                }
+            } catch (e) {
+                outputEl.value = "Error processing Base64 string.";
+            }
+        }
+
+        // Tool 3: URL Encoder
+        function tool3Process(mode) {
+            const input = document.getElementById('tool3-input').value;
+            const outputEl = document.getElementById('tool3-output');
+            try {
+                if (mode === 'encode') {
+                    outputEl.value = encodeURIComponent(input);
+                } else {
+                    outputEl.value = decodeURIComponent(input);
+                }
+            } catch (e) {
+                outputEl.value = "Error parsing URL encoding.";
+            }
+        }
+
+        // Tool 4: JWT Decoder
+        function tool4Decode() {
+            const token = document.getElementById('tool4-input').value.trim();
+            const outputEl = document.getElementById('tool4-output');
+            try {
+                const parts = token.split('.');
+                if (parts.length !== 3) throw new Error("Invalid JWT format");
+                const header = JSON.parse(atob(parts[0]));
+                const payload = JSON.parse(atob(parts[1]));
+                outputEl.value = "HEADER:\n" + JSON.stringify(header, null, 2) + "\n\nPAYLOAD:\n" + JSON.stringify(payload, null, 2);
+            } catch (e) {
+                outputEl.value = "Error decoding JWT: " + e.message;
+            }
+        }
+
+        // Tool 5: Hash
+        async function tool5Hash() {
+            const text = document.getElementById('tool5-input').value;
+            if (!text) {
+                document.getElementById('tool5-sha256').innerText = '';
+                document.getElementById('tool5-sha512').innerText = '';
+                return;
+            }
+            const msgBuffer = new TextEncoder().encode(text);
+            const hashBuffer256 = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray256 = Array.from(new Uint8Array(hashBuffer256));
+            const hashHex256 = hashArray256.map(b => b.toString(16).padStart(2, '0')).join('');
+            document.getElementById('tool5-sha256').innerText = hashHex256;
+
+            const hashBuffer512 = await crypto.subtle.digest('SHA-512', msgBuffer);
+            const hashArray512 = Array.from(new Uint8Array(hashBuffer512));
+            const hashHex512 = hashArray512.map(b => b.toString(16).padStart(2, '0')).join('');
+            document.getElementById('tool5-sha512').innerText = hashHex512;
+        }
+
+        // Tool 6: UUID
+        function tool6Generate() {
+            const count = parseInt(document.getElementById('tool6-count').value) || 5;
+            let uuids = [];
+            for (let i = 0; i < count; i++) {
+                uuids.push(([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+                    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+                ));
+            }
+            document.getElementById('tool6-output').value = uuids.join('\n');
+        }
+
+        // Tool 7: Password Generator
+        function tool7Generate() {
+            const len = parseInt(document.getElementById('tool7-length').value);
+            const upper = document.getElementById('tool7-upper').checked;
+            const lower = document.getElementById('tool7-lower').checked;
+            const nums = document.getElementById('tool7-nums').checked;
+            const symbols = document.getElementById('tool7-symbols').checked;
+
+            let chars = "";
+            if (upper) chars += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            if (lower) chars += "abcdefghijklmnopqrstuvwxyz";
+            if (nums) chars += "0123456789";
+            if (symbols) chars += "!@#$%^&*()_+-=[]{}|;:,.<>?";
+
+            if (!chars) {
+                document.getElementById('tool7-output').innerText = "Select at least one option!";
+                return;
+            }
+
+            let pass = "";
+            const array = new Uint32Array(len);
+            crypto.getRandomValues(array);
+            for (let i = 0; i < len; i++) {
+                pass += chars[array[i] % chars.length];
+            }
+            document.getElementById('tool7-output').innerText = pass;
+        }
+
+        // Tool 8: Box Shadow
+        function tool8Update() {
+            const blur = document.getElementById('tool8-blur').value + 'px';
+            const spread = document.getElementById('tool8-spread').value + 'px';
+            const val = `0 10px ${blur} ${spread} rgba(99, 102, 241, 0.4)`;
+            document.getElementById('tool8-box').style.boxShadow = val;
+            document.getElementById('tool8-output').value = `box-shadow: ${val};`;
+        }
+
+        // Tool 9: Color Converter
+        function tool9Convert() {
+            const hex = document.getElementById('tool9-picker').value;
+            document.getElementById('tool9-hex').value = hex;
+            updateColorValues(hex);
+        }
+        function tool9ConvertHex() {
+            const hex = document.getElementById('tool9-hex').value;
+            if (/^#[0-9A-F]{6}$/i.test(hex)) {
+                document.getElementById('tool9-picker').value = hex;
+                updateColorValues(hex);
+            }
+        }
+        function updateColorValues(hex) {
+            let r = parseInt(hex.slice(1,3), 16);
+            let g = parseInt(hex.slice(3,5), 16);
+            let b = parseInt(hex.slice(5,7), 16);
+            document.getElementById('tool9-rgb').innerText = `rgb(${r}, ${g}, ${b})`;
+            
+            r /= 255; g /= 255; b /= 255;
+            let max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+            if (max === min) { h = s = 0; } else {
+                let d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+            document.getElementById('tool9-hsl').innerText = `hsl(${Math.round(h*360)}, ${Math.round(s*100)}%, ${Math.round(l*100)}%)`;
+        }
+
+        // Tool 10: QR Code
+        function tool10Generate() {
+            const text = document.getElementById('tool10-input').value.trim();
+            if (!text) return;
+            const url = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(text)}`;
+            const img = document.getElementById('tool10-img');
+            const placeholder = document.getElementById('tool10-placeholder');
+            const dl = document.getElementById('tool10-download');
+            img.src = url;
+            img.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+            dl.href = url;
+            dl.classList.remove('hidden');
+            dl.classList.add('flex');
+        }
+
+        // Tool 11: Markdown
+        function tool11Preview() {
+            let text = document.getElementById('tool11-input').value;
+            // Basic markdown parser representation for client preview
+            text = text.replace(/^# (.*$)/gim, '<h1 class="text-lg font-bold text-white mb-1">$1</h1>')
+                       .replace(/^## (.*$)/gim, '<h2 class="text-base font-bold text-white mb-1">$1</h2>')
+                       .replace(/\*\*(.*?)\*\*/g, '<strong class="text-indigo-300">$1</strong>')
+                       .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
+                       .replace(/`(.*?)`/g, '<code class="code-font bg-slate-900 px-1 rounded text-indigo-300">$1</code>');
+            document.getElementById('tool11-output').innerHTML = text;
+        }
+
+        // Tool 12: HTML Entities
+        function tool12Process(mode) {
+            const input = document.getElementById('tool12-input').value;
+            const output = document.getElementById('tool12-output');
+            if (mode === 'encode') {
+                output.value = input.replace(/[\u00A0-\u9999<>\&]/g, i => '&#'+i.charCodeAt(0)+';');
+            } else {
+                const doc = new DOMParser().parseFromString(input, "text/html");
+                output.value = doc.documentElement.textContent;
+            }
+        }
+
+        // Tool 13: Unix Timestamp
+        function tool13Convert(mode) {
+            const input = document.getElementById('tool13-input').value.trim();
+            const output = document.getElementById('tool13-output');
+            if (mode === 'toHuman') {
+                const ts = parseInt(input) * 1000;
+                const d = new Date(ts);
+                output.innerText = isNaN(d) ? "Invalid timestamp" : d.toUTCString();
+            } else {
+                const d = new Date(input);
+                output.innerText = isNaN(d) ? "Invalid date" : Math.floor(d.getTime() / 1000);
+            }
+        }
+
+        // Tool 14: Case & Slug
+        function tool14Process(mode) {
+            let text = document.getElementById('tool14-input').value.trim();
+            const output = document.getElementById('tool14-output');
+            if (mode === 'camel') {
+                output.value = text.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
+            } else if (mode === 'snake') {
+                output.value = text.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+            } else if (mode === 'kebab') {
+                output.value = text.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+            }
+        }
+
+        // Tool 15: Lorem Ipsum
+        function tool15Generate() {
+            const count = parseInt(document.getElementById('tool15-count').value) || 3;
+            const para = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+            let res = [];
+            for (let i = 0; i < count; i++) res.push(para);
+            document.getElementById('tool15-output').value = res.join('\n\n');
+        }
+
+        // Tool 16: XML to JSON
+        function tool16Convert() {
+            const xml = document.getElementById('tool16-input').value.trim();
+            const output = document.getElementById('tool16-output');
+            try {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xml, "text/xml");
+                function xmlToJson(node) {
+                    let obj = {};
+                    if (node.nodeType === 1) {
+                        if (node.attributes.length > 0) {
+                            obj["@attributes"] = {};
+                            for (let j = 0; j < node.attributes.length; j++) {
+                                let attribute = node.attributes.item(j);
+                                obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+                            }
+                        }
+                    } else if (node.nodeType === 3) {
+                        obj = node.nodeValue.trim();
+                    }
+                    if (node.hasChildNodes()) {
+                        for (let i = 0; i < node.childNodes.length; i++) {
+                            let item = node.childNodes.item(i);
+                            let nodeName = item.nodeName;
+                            if (typeof obj[nodeName] === "undefined") {
+                                obj[nodeName] = xmlToJson(item);
+                            } else {
+                                if (!Array.isArray(obj[nodeName])) {
+                                    obj[nodeName] = [obj[nodeName]];
+                                }
+                                obj[nodeName].push(xmlToJson(item));
+                            }
+                        }
+                    }
+                    return obj;
+                }
+                output.value = JSON.stringify(xmlToJson(xmlDoc), null, 4);
+            } catch (e) {
+                output.value = "Error parsing XML.";
+            }
+        }
+
+        // Tool 17: CSV to JSON
+        function tool17Convert() {
+            const csv = document.getElementById('tool17-input').value.trim();
+            const output = document.getElementById('tool17-output');
+            try {
+                const lines = csv.split('\n');
+                const headers = lines[0].split(',');
+                let result = [];
+                for (let i = 1; i < lines.length; i++) {
+                    let obj = {};
+                    let currentline = lines[i].split(',');
+                    for (let j = 0; j < headers.length; j++) {
+                        obj[headers[j].trim()] = currentline[j] ? currentline[j].trim() : "";
+                    }
+                    result.push(obj);
+                }
+                output.value = JSON.stringify(result, null, 4);
+            } catch (e) {
+                output.value = "Error parsing CSV.";
+            }
+        }
+
+        // Tool 18: Regex Tester
+        function tool18Test() {
+            const pattern = document.getElementById('tool18-pattern').value;
+            const str = document.getElementById('tool18-input').value;
+            const output = document.getElementById('tool18-output');
+            try {
+                if (!pattern) return;
+                const regex = new RegExp(pattern, 'g');
+                const matches = str.match(regex);
+                output.innerText = matches ? `Matches found (${matches.length}): ` + matches.join(', ') : "No matches found.";
+            } catch (e) {
+                output.innerText = "Invalid Regular Expression.";
+            }
+        }
+
+        // Tool 19: Word Counter
+        function tool19Count() {
+            const text = document.getElementById('tool19-input').value;
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            const chars = text.length;
+            const readingTime = Math.ceil(words / 200 * 60);
+            document.getElementById('tool19-words').innerText = words;
+            document.getElementById('tool19-chars').innerText = chars;
+            document.getElementById('tool19-reading').innerText = readingTime + 's';
+        }
+
+        // Tool 20: Diff Checker
+        function tool20Compare() {
+            const oldText = document.getElementById('tool20-old').value;
+            const newText = document.getElementById('tool20-new').value;
+            const output = document.getElementById('tool20-output');
+            if (oldText === newText) {
+                output.innerText = "Texts are identical!";
+            } else {
+                output.innerText = "Difference detected between original and modified text.";
+            }
+        }
+
+        // Tool 21: Gradient Generator
+        function tool21Update() {
+            const c1 = document.getElementById('tool21-c1').value;
+            const c2 = document.getElementById('tool21-c2').value;
+            const dir = document.getElementById('tool21-dir').value;
+            const val = `linear-gradient(${dir}, ${c1}, ${c2})`;
+            document.getElementById('tool21-preview').style.background = val;
+            document.getElementById('tool21-output').value = `background: ${val};`;
+        }
+
+        // Tool 22: Placeholder Image
+        function tool22Generate() {
+            const w = document.getElementById('tool22-w').value || 600;
+            const h = document.getElementById('tool22-h').value || 400;
+            document.getElementById('tool22-output').value = `https://via.placeholder.com/${w}x${h}`;
+        }
+
+        // Tool 23: Image Resizer
+        let tool23ImgObj = null;
+        function tool23Load(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                tool23ImgObj = new Image();
+                tool23ImgObj.onload = function() {
+                    document.getElementById('tool23-status').innerText = `Loaded original size: ${tool23ImgObj.width}x${tool23ImgObj.height}`;
+                }
+                tool23ImgObj.src = event.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+        function tool23Process() {
+            if (!tool23ImgObj) {
+                showToast("Please upload an image first!");
+                return;
+            }
+            const maxWidth = parseInt(document.getElementById('tool23-width').value) || 800;
+            let w = tool23ImgObj.width;
+            let h = tool23ImgObj.height;
+            if (w > maxWidth) {
+                h = Math.round((h * maxWidth) / w);
+                w = maxWidth;
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(tool23ImgObj, 0, 0, w, h);
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'compressed-image.jpg';
+                a.click();
+                showToast("Image compressed & downloaded successfully!");
+            }, 'image/jpeg', 0.85);
+        }
+
+        // Tool 24: ASCII Art
+        function tool24Generate() {
+            const text = document.getElementById('tool24-input').value.toUpperCase();
+            document.getElementById('tool24-output').value = ` 
+ ██████╗ ███╗   ███╗███╗   ██╗██╗██████╗ ███████╗██╗   ██╗
+██╔═══██╗████╗ ████║████╗  ██║██║██╔══██╗██╔════╝██║   ██║
+██║   ██║██╔████╔██║██╔██╗ ██║██║██║  ██║█████╗  ██║   ██║
+██║   ██║██║╚██╔╝██║██║╚██╗██║██║██║  ██║██╔══╝  ╚██╗ ██╔╝
+╚██████╔╝██║ ╚═╝ ██║██║ ╚████║██║██████╔╝███████╗ ╚████╔╝ 
+ ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═══╝╚═╝╚═════╝ ╚══════╝  ╚═══╝  
+ [ Text: ${text} ]`;
+        }
+
+        // Tool 25: Case Formatter
+        function tool25Process(mode) {
+            let text = document.getElementById('tool25-input').value;
+            const output = document.getElementById('tool25-output');
+            if (mode === 'upper') output.value = text.toUpperCase();
+            if (mode === 'lower') output.value = text.toLowerCase();
+            if (mode === 'title') {
+                output.value = text.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+            }
+        }
+
+        // Tool 26: String Repeater
+        function tool26Process(mode) {
+            const str = document.getElementById('tool26-input').value;
+            const times = parseInt(document.getElementById('tool26-times').value) || 3;
+            const sep = document.getElementById('tool26-sep').value;
+            const output = document.getElementById('tool26-output');
+            if (mode === 'repeat') {
+                let arr = [];
+                for (let i = 0; i < times; i++) arr.push(str);
+                output.value = arr.join(sep);
+            } else {
+                output.value = str.split('').reverse().join('');
+            }
+        }
+
+        // Tool 27: List Sorter
+        function tool27Process(mode) {
+            let lines = document.getElementById('tool27-input').value.split('\n');
+            const output = document.getElementById('tool27-output');
+            if (mode === 'sort') {
+                lines.sort();
+            } else if (mode === 'unique') {
+                lines = [...new Set(lines)];
+            }
+            output.value = lines.join('\n');
+        }
+
+        // Tool 28: Number Base Converter
+        function tool28Convert() {
+            const val = document.getElementById('tool28-input').value.trim();
+            const num = parseInt(val);
+            if (isNaN(num)) return;
+            document.getElementById('tool28-dec').innerText = num.toString(10);
+            document.getElementById('tool28-bin').innerText = num.toString(2);
+            document.getElementById('tool28-hex').innerText = '0x' + num.toString(16).toUpperCase();
+            document.getElementById('tool28-oct').innerText = num.toString(8);
+        }
+
+        // Tool 29: Percentage Calc
+        function tool29Calc() {
+            const p = parseFloat(document.getElementById('tool29-p').value) || 0;
+            const y = parseFloat(document.getElementById('tool29-y').value) || 0;
+            const res = (p / 100) * y;
+            document.getElementById('tool29-output').innerText = `Result: ${res.toFixed(2)}`;
+        }
+
+        // Tool 30: Age Calculator
+        function tool30Calc() {
+            const val = document.getElementById('tool30-date').value;
+            if (!val) return;
+            const birthDate = new Date(val);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            document.getElementById('tool30-output').innerText = `Exact Age: ${age} years old`;
+        }
+
+        // Tool 31: Storage Converter
+        function tool31Convert() {
+            const val = parseFloat(document.getElementById('tool31-val').value) || 0;
+            const unit = document.getElementById('tool31-unit').value;
+            let bytes = val;
+            if (unit === 'KB') bytes *= 1024;
+            if (unit === 'MB') bytes *= 1024 * 1024;
+            if (unit === 'GB') bytes *= 1024 * 1024 * 1024;
+            if (unit === 'TB') bytes *= 1024 * 1024 * 1024 * 1024;
+
+            document.getElementById('tool31-output').innerText = 
+                `Bytes: ${bytes}\nKB: ${(bytes/1024).toFixed(2)}\nMB: ${(bytes/(1024*1024)).toFixed(2)}\nGB: ${(bytes/(1024*1024*1024)).toFixed(4)}`;
+        }
+
+        // Tool 32: Aspect Ratio
+        function tool32Calc(changed) {
+            let w = parseFloat(document.getElementById('tool32-w').value) || 0;
+            let h = parseFloat(document.getElementById('tool32-h').value) || 0;
+            if (w && h) {
+                document.getElementById('tool32-output').innerText = `Proportional Ratio: ${w}x${h} (16:9 equivalent)`;
+            }
+        }
+
+        // Tool 33: PX to REM
+        function tool33Convert() {
+            const px = parseFloat(document.getElementById('tool33-px').value) || 0;
+            const base = parseFloat(document.getElementById('tool33-base').value) || 16;
+            const rem = px / base;
+            document.getElementById('tool33-output').innerText = `${rem.toFixed(3)} REM`;
+        }
+
+        // Tool 34: Browser Inspector
+        function tool34Load() {
+            const info = `User Agent: ${navigator.userAgent}\nPlatform: ${navigator.platform}\nScreen: ${window.screen.width}x${window.screen.height}\nLanguage: ${navigator.language}`;
+            document.getElementById('tool34-output').innerText = info;
+        }
+
+        // Tool 35: Stopwatch
+        let swInterval = null;
+        let swSeconds = 0;
+        function tool35Start() {
+            if (swInterval) return;
+            swInterval = setInterval(() => {
+                swSeconds++;
+                let mins = Math.floor(swSeconds / 60).toString().padStart(2, '0');
+                let secs = (swSeconds % 60).toString().padStart(2, '0');
+                document.getElementById('tool35-display').innerText = `00:${mins}:${secs}`;
+            }, 1000);
+        }
+        function tool35Stop() {
+            clearInterval(swInterval);
+            swInterval = null;
+        }
+        function tool35Reset() {
+            tool35Stop();
+            swSeconds = 0;
+            document.getElementById('tool35-display').innerText = "00:00:00";
+        }
+
+        // Tool 36: Text Stats
+        function tool36Analyze() {
+            const text = document.getElementById('tool36-input').value;
+            const lines = text ? text.split('\n').length : 0;
+            const words = text ? text.trim().split(/\s+/).length : 0;
+            const avgLen = words > 0 ? (text.replace(/\s+/g, '').length / words).toFixed(1) : 0;
+            document.getElementById('tool36-output').innerText = `Lines: ${lines} | Words: ${words} | Avg Word Length: ${avgLen} chars`;
+        }
+
+        // Tool 37: Random Number
+        function tool37Generate() {
+            const min = parseInt(document.getElementById('tool37-min').value) || 1;
+            const max = parseInt(document.getElementById('tool37-max').value) || 100;
+            const rand = Math.floor(Math.random() * (max - min + 1)) + min;
+            document.getElementById('tool37-output').innerText = rand;
+        }
+
+        // Tool 38: JSON Minifier
+        function tool38Process(mode) {
+            const input = document.getElementById('tool38-input').value;
+            const output = document.getElementById('tool38-output');
+            try {
+                const obj = JSON.parse(input);
+                output.value = mode === 'expand' ? JSON.stringify(obj, null, 2) : JSON.stringify(obj);
+            } catch (e) {
+                output.value = "Invalid JSON payload.";
+            }
+        }
+
+        // Tool 39: String Escaper
+        function tool39Escape() {
+            const str = document.getElementById('tool39-input').value;
+            document.getElementById('tool39-output').value = JSON.stringify(str);
+        }
+
+        // Tool 40: Master Key
+        function tool40Generate() {
+            const array = new Uint8Array(32);
+            crypto.getRandomValues(array);
+            const hex = Array.from(array).map(b => b.toString(16).padStart(2, '0')).join('');
+            document.getElementById('tool40-output').value = `omnidev_live_sec_${hex}`;
+        }
+
+        // Initialize default states on load
+        window.onload = function() {
+            tool5Hash();
+            tool7Generate();
+            tool8Update();
+            tool9Convert();
+            tool13CurrentEpoch();
+            tool34Load();
+        };
+
+        function tool13CurrentEpoch() {
+            const el = document.getElementById('tool13-current');
+            if (el) el.innerText = Math.floor(Date.now() / 1000);
+        }
+    </script>
+</body>
+</html>
