@@ -8,7 +8,7 @@
     <meta property="og:type" content="website"><meta property="og:title" content="OmniDev Suite — 100 Free Online Tools for Developers, Creators & Bangladesh"><meta property="og:description" content="100 free browser tools: scratch map & 64 districts, JSON→Dart, QR with logo, prayer times, taka in words, Bijoy↔Unicode, background remover, PDF merge and more. No sign-up, nothing is uploaded."><meta property="og:site_name" content="OmniDev Suite">
     <meta name="twitter:card" content="summary"><meta name="twitter:title" content="OmniDev Suite — 100 Free Online Tools for Developers, Creators & Bangladesh"><meta name="twitter:description" content="100 free browser tools: scratch map & 64 districts, JSON→Dart, QR with logo, prayer times, taka in words, Bijoy↔Unicode, background remover, PDF merge and more. No sign-up, nothing is uploaded.">
     <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png" type="image/png"><link rel="apple-touch-icon" href="icon-192.png">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "OmniDev Suite", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "100 free browser tools: scratch map & 64 districts, JSON\u2192Dart, QR with logo, prayer times, taka in words, Bijoy\u2194Unicode, background remover, PDF merge and more. No sign-up, nothing is uploaded.", "author": {"@type": "Person", "name": "Tamim Rahman"}}</script>
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "OmniDev Suite", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "100 free browser tools: scratch map & 64 districts, JSON\u2192Dart, QR with logo, prayer times, taka in words, Bijoy\u2194Unicode, background remover, PDF merge and more. No sign-up, nothing is uploaded.", "author": {"@type": "Person", "name": "OmniDev"}}</script>
     <script>try{if(JSON.parse(localStorage.getItem('omni_theme'))==='light'){document.documentElement.classList.add('light');document.documentElement.classList.remove('dark');}}catch(e){}</script>
     <title>OmniDev Suite — 100 Free Online Tools for Developers, Creators & Bangladesh</title>
     <!-- Tailwind CSS CDN -->
@@ -1052,7 +1052,7 @@ input[type=range]{height:6px}
                 </div>
                 <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-3">Support Creator & Developer</h2>
                 <p class="text-sm text-slate-300 mb-6 leading-relaxed">
-                    OmniDev Suite is meticulously crafted and maintained by <span class="text-indigo-400 font-bold">Tamim Rahman</span>. If this developer hub speeds up your workflow, consider supporting the creator!
+                    OmniDev Suite is meticulously crafted and maintained by <span class="text-indigo-400 font-bold">OmniDev</span>. If this developer hub speeds up your workflow, consider supporting the creator!
                 </p>
                 <div class="inline-flex flex-col sm:flex-row items-center justify-center gap-4 bg-slate-950/80 border border-slate-800 p-4 rounded-2xl shadow-inner">
                     <div class="flex items-center space-x-3 px-2">
@@ -1074,7 +1074,7 @@ input[type=range]{height:6px}
 
     <!-- Footer -->
     <footer class="mt-auto border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500">
-        <p>&copy; 2026 OmniDev Suite. Built with passion by Tamim Rahman. 100% Client-Side Executable.</p>
+        <p>&copy; 2026 OmniDev Suite. Built with passion by OmniDev. 100% Client-Side Executable.</p>
     </footer>
 
     <!-- JavaScript Application Logic for the original 40 Tools -->
@@ -5191,7 +5191,7 @@ const FANCY = (() => {
 })();
 simple({
   n: 71, title: 'Fancy Unicode Font Generator', bn: 'ফ্যান্সি ফন্ট জেনারেটর', cat: 'creator', desc: '25 stylish text styles for Instagram bio, Facebook, TikTok and chat. Click any line to copy. (English letters only.)', tags: 'fancy font unicode bold italic script instagram bio stylish text generator',
-  inputs: [{ id: 'txt', label: 'Your text', value: 'Tamim Rahman', ph: 'Type here…' }],
+  inputs: [{ id: 'txt', label: 'Your text', value: 'OmniDev', ph: 'Type here…' }],
   auto: true, live: true, nocopy: true, placeholder: 'Styled text appears here…',
   bind(api) { api.card._fancy = []; api.outEl().addEventListener('click', e => { const b = e.target.closest('[data-fi]'); if (b) copyText(api.card._fancy[+b.dataset.fi]); }); },
   actions: [{ label: 'Generate', run(a) {
@@ -5307,7 +5307,7 @@ function bioHTML(o) {
 custom({
   n: 74, title: 'Link-in-Bio Page Builder', bn: 'লিংক-ইন-বায়ো পেজ বিল্ডার', cat: 'creator', desc: 'Build your own Linktree-style page, preview it live and download one HTML file to host anywhere for free.', tags: 'link in bio linktree page builder instagram social profile html',
   ui(n) {
-    const f = [{ id: 'name', label: 'Name', value: 'Tamim Rahman', half: true }, { id: 'av', label: 'Avatar (emoji or letter)', value: 'T', half: true }, { id: 'bio', label: 'Short bio', value: 'Flutter & PHP developer · Building tools for everyone' },
+    const f = [{ id: 'name', label: 'Name', value: 'OmniDev', half: true }, { id: 'av', label: 'Avatar (emoji or letter)', value: 'T', half: true }, { id: 'bio', label: 'Short bio', value: 'Flutter & PHP developer · Building tools for everyone' },
     { id: 'theme', label: 'Theme', type: 'select', options: [['ocean', 'Ocean'], ['sunset', 'Sunset'], ['forest', 'Forest'], ['night', 'Night'], ['light', 'Light']], value: 'ocean' },
     { id: 'links', label: 'Links — one per line as  Label | URL', type: 'textarea', rows: 5, mono: true, value: 'My Website | https://example.com\nFacebook | https://facebook.com/yourname\nTelegram | https://t.me/yourname\nWhatsApp | https://wa.me/8801XXXXXXXXX' }];
     return { body: fieldsHTML(n, f) + `<iframe data-fr sandbox="" class="w-full rounded-xl border border-slate-800 bg-white mb-3" style="height:360px" title="Preview"></iframe>`, foot: `<button data-dl class="flex-1 ${BTN}"><i class="fa-solid fa-download mr-1"></i>Download HTML</button><button data-cp class="${BTN2}" title="Copy code"><i class="fa-regular fa-copy"></i></button>`,
