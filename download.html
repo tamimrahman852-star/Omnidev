@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download OmniDev APK</title>
+    <meta name="description" content="Download the OmniDev app for Android. Free utility tools for Bangladesh.">
+    <meta name="theme-color" content="#0A0E27">
+    <link rel="icon" href="icon-192.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans Bengali', sans-serif;
+            background: linear-gradient(135deg, #0A0E27 0%, #1A1F3A 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container { max-width: 440px; width: 100%; text-align: center; }
+        .logo {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, #00E676, #00BFA5);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            box-shadow: 0 12px 48px rgba(0, 230, 118, 0.4);
+        }
+        h1 { font-size: 30px; margin-bottom: 8px; }
+        .tagline { color: rgba(255,255,255,0.6); font-size: 15px; margin-bottom: 30px; }
+
+        .referral-banner {
+            display: none;
+            background: rgba(0, 230, 118, 0.1);
+            border: 1px solid rgba(0, 230, 118, 0.3);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 20px;
+        }
+        .referral-banner.show { display: block; }
+        .referral-label { font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 4px; }
+        .referral-code {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00E676;
+            letter-spacing: 4px;
+            cursor: pointer;
+        }
+        .referral-hint {
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 6px;
+        }
+
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: #00E676;
+            color: #000;
+            text-decoration: none;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: bold;
+            box-shadow: 0 8px 24px rgba(0, 230, 118, 0.4);
+            margin-bottom: 12px;
+            transition: transform 0.15s;
+            border: none;
+            cursor: pointer;
+        }
+        .download-btn:hover { transform: translateY(-2px); }
+        .download-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .steps {
+            margin-top: 32px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px;
+            padding: 20px;
+            text-align: left;
+        }
+        .steps h2 {
+            font-size: 15px;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .step:last-child { margin-bottom: 0; }
+        .step-num {
+            width: 26px;
+            height: 26px;
+            background: #00E676;
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .step-text {
+            font-size: 13px;
+            color: rgba(255,255,255,0.75);
+            line-height: 1.6;
+            padding-top: 2px;
+        }
+
+        .progress {
+            display: none;
+            margin-top: 16px;
+        }
+        .progress.show { display: block; }
+        .progress-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #00E676;
+            width: 0%;
+            transition: width 0.2s;
+        }
+        .progress-text {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 8px;
+        }
+
+        .footer {
+            margin-top: 32px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+        }
+        .footer a { color: #00E676; text-decoration: none; }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #00E676;
+            color: #000;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">📱</div>
+        <h1>OmniDev</h1>
+        <p class="tagline">Download the app for Android</p>
+
+        <div class="referral-banner" id="refBanner">
+            <div class="referral-label">🎁 Your Referral Code</div>
+            <div class="referral-code" id="refCode" onclick="copyCode()">—</div>
+            <div class="referral-hint">Tap to copy · Use it when signing up</div>
+        </div>
+
+        <button id="downloadBtn" class="download-btn" onclick="startDownload()">
+            ⬇️ Download APK
+        </button>
+
+        <div class="progress" id="progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Starting download...</div>
+        </div>
+
+        <div class="steps">
+            <h2>📥 How to install</h2>
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-text">Tap "Download APK" above</div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-text">Open the downloaded file in your notification bar or file manager</div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-text">If prompted, allow "Install from unknown sources" for your browser</div>
+            </div>
+            <div class="step">
+                <div class="step-num">4</div>
+                <div class="step-text">Tap Install, then open OmniDev</div>
+            </div>
+            <div class="step">
+                <div class="step-num">5</div>
+                <div class="step-text">Sign up with your name and phone number</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Made with ❤️ by Tamim Rahman</p>
+            <p style="margin-top: 6px;">
+                <a href="index.html">Use tools in browser</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">✅ Referral code copied!</div>
+
+    <script>
+        // APK URL — এখানে আপনার GitHub Releases link বসান
+        const APK_URL = 'https://github.com/tamimrahman852-star/Omnidev/releases/latest/download/app-release.apk';
+
+        // Referral code from URL
+        const params = new URLSearchParams(window.location.search);
+        const ref = params.get('ref');
+        if (ref) {
+            document.getElementById('refBanner').classList.add('show');
+            document.getElementById('refCode').textContent = ref.toUpperCase();
+            // localStorage-এ সেভ করুন যাতে app পরে পড়তে পারে
+            try { localStorage.setItem('referral_code', ref.toUpperCase()); } catch(e) {}
+        }
+
+        function copyCode() {
+            const code = document.getElementById('refCode').textContent;
+            if (code === '—') return;
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('✅ Referral code copied!');
+            });
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2000);
+        }
+
+        function startDownload() {
+            const btn = document.getElementById('downloadBtn');
+            btn.disabled = true;
+            btn.textContent = '⬇️ Downloading...';
+            const prog = document.getElementById('progress');
+            const fill = document.getElementById('progressFill');
+            const text = document.getElementById('progressText');
+            prog.classList.add('show');
+
+            // Fake progress (real download browser handles)
+            let pct = 0;
+            const iv = setInterval(() => {
+                pct += 5;
+                fill.style.width = pct + '%';
+                text.textContent = pct < 100 ? `Downloading... ${pct}%` : 'Download complete! Opening...';
+                if (pct >= 100) {
+                    clearInterval(iv);
+                    setTimeout(() => {
+                        // Trigger download
+                        const a = document.createElement('a');
+                        a.href = APK_URL;
+                        a.download = 'omnidev.apk';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        setTimeout(() => {
+                            prog.classList.remove('show');
+                            fill.style.width = '0%';
+                            btn.disabled = false;
+                            btn.textContent = '⬇️ Download APK';
+                        }, 2000);
+                    }, 500);
+                }
+            }, 60);
+        }
+    </script>
+</body>
+</html>
