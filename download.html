@@ -33,32 +33,47 @@
             box-shadow: 0 12px 48px rgba(0, 230, 118, 0.4);
         }
         h1 { font-size: 30px; margin-bottom: 8px; }
-        .tagline { color: rgba(255,255,255,0.6); font-size: 15px; margin-bottom: 30px; }
+        .tagline { color: rgba(255,255,255,0.6); font-size: 15px; margin-bottom: 24px; }
 
+        /* Referral banner */
         .referral-banner {
             display: none;
             background: rgba(0, 230, 118, 0.1);
             border: 1px solid rgba(0, 230, 118, 0.3);
             border-radius: 14px;
             padding: 14px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         .referral-banner.show { display: block; }
+        .referral-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            background: rgba(0, 230, 118, 0.2);
+            color: #00E676;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
         .referral-label { font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 4px; }
         .referral-code {
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 26px;
+            font-weight: 900;
             color: #00E676;
             letter-spacing: 4px;
             cursor: pointer;
+            font-family: 'Courier New', monospace;
         }
         .referral-hint {
             font-size: 10px;
             color: rgba(255,255,255,0.5);
-            margin-top: 6px;
+            margin-top: 8px;
         }
 
-        .download-btn {
+        /* Buttons */
+        .btn-primary {
             display: block;
             width: 100%;
             padding: 18px;
@@ -74,13 +89,42 @@
             border: none;
             cursor: pointer;
         }
-        .download-btn:hover { transform: translateY(-2px); }
-        .download-btn:disabled {
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-primary:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
         }
 
+        .btn-secondary {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: rgba(0, 230, 118, 0.1);
+            color: #00E676;
+            text-decoration: none;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 700;
+            border: 2px solid rgba(0, 230, 118, 0.4);
+            margin-bottom: 12px;
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+        .btn-secondary:hover {
+            background: rgba(0, 230, 118, 0.2);
+            border-color: #00E676;
+        }
+
+        .btn-secondary .hint {
+            display: block;
+            font-size: 10px;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+
+        /* Steps */
         .steps {
             margin-top: 32px;
             background: rgba(255,255,255,0.04);
@@ -121,6 +165,7 @@
             padding-top: 2px;
         }
 
+        /* Progress */
         .progress {
             display: none;
             margin-top: 16px;
@@ -151,6 +196,7 @@
         }
         .footer a { color: #00E676; text-decoration: none; }
 
+        /* Toast */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -164,8 +210,25 @@
             font-size: 14px;
             transition: transform 0.3s;
             z-index: 1000;
+            box-shadow: 0 8px 24px rgba(0, 230, 118, 0.5);
         }
         .toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 16px 0;
+            color: rgba(255,255,255,0.3);
+            font-size: 11px;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+        }
     </style>
 </head>
 <body>
@@ -174,13 +237,22 @@
         <h1>OmniDev</h1>
         <p class="tagline">Download the app for Android</p>
 
+        <!-- Referral Banner (only shows if ?ref=CODE) -->
         <div class="referral-banner" id="refBanner">
+            <div class="referral-badge">✅ Referral detected</div>
             <div class="referral-label">🎁 Your Referral Code</div>
             <div class="referral-code" id="refCode" onclick="copyCode()">—</div>
-            <div class="referral-hint">Tap to copy · Use it when signing up</div>
+            <div class="referral-hint">Tap to copy · Auto-applied when you sign up</div>
         </div>
 
-        <button id="downloadBtn" class="download-btn" onclick="startDownload()">
+        <!-- Open in App (only if app installed) -->
+        <a id="openInAppBtn" class="btn-secondary" href="#" style="display:none;">
+            📱 Open in OmniDev
+            <span class="hint">App already installed? Tap here</span>
+        </a>
+
+        <!-- Download APK -->
+        <button id="downloadBtn" class="btn-primary" onclick="startDownload()">
             ⬇️ Download APK
         </button>
 
@@ -191,6 +263,7 @@
             <div class="progress-text" id="progressText">Starting download...</div>
         </div>
 
+        <!-- Steps -->
         <div class="steps">
             <h2>📥 How to install</h2>
             <div class="step">
@@ -211,7 +284,7 @@
             </div>
             <div class="step">
                 <div class="step-num">5</div>
-                <div class="step-text">Sign up with your name and phone number</div>
+                <div class="step-text">Sign up — your referral code will be applied automatically</div>
             </div>
         </div>
 
@@ -226,23 +299,81 @@
     <div class="toast" id="toast">✅ Referral code copied!</div>
 
     <script>
-        // APK URL — এখানে আপনার GitHub Releases link বসান
+        // ─────────────────────────────────────────────
+        // CONFIG
+        // ─────────────────────────────────────────────
         const APK_URL = 'https://github.com/tamimrahman852-star/Omnidev/releases/latest/download/app-release.apk';
+        const APP_SCHEME = 'omnidev'; // custom scheme
+        const PLAY_STORE = ''; // future: Play Store URL (leave empty)
 
-        // Referral code from URL
+        // ─────────────────────────────────────────────
+        // Referral Code Detection
+        // ─────────────────────────────────────────────
         const params = new URLSearchParams(window.location.search);
-        const ref = params.get('ref');
+        const refRaw = params.get('ref');
+        const ref = refRaw ? refRaw.trim().toUpperCase() : '';
+
         if (ref) {
             document.getElementById('refBanner').classList.add('show');
-            document.getElementById('refCode').textContent = ref.toUpperCase();
-            // localStorage-এ সেভ করুন যাতে app পরে পড়তে পারে
-            try { localStorage.setItem('referral_code', ref.toUpperCase()); } catch(e) {}
+            document.getElementById('refCode').textContent = ref;
+
+            // Save to localStorage (fallback for app)
+            try { localStorage.setItem('referral_code', ref); } catch (e) {}
+
+            // Show "Open in App" button
+            const openBtn = document.getElementById('openInAppBtn');
+            openBtn.style.display = 'block';
+            openBtn.href = `${APP_SCHEME}://r/${ref}`;
+
+            // ─────────────────────────────────────────
+            // Try to auto-open the app
+            // If app is installed, it opens within ~1 second
+            // If not, the user stays here and can download
+            // ─────────────────────────────────────────
+            let appOpened = false;
+            const startTime = Date.now();
+
+            // Listen for page visibility change
+            // If page hides within 1.5s, app probably opened
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) appOpened = true;
+            });
+
+            // Attempt to launch app
+            setTimeout(() => {
+                try {
+                    window.location.href = `${APP_SCHEME}://r/${ref}`;
+                } catch (e) {}
+            }, 100);
+
+            // After 1.5s, if page still visible → app likely not installed
+            setTimeout(() => {
+                const elapsed = Date.now() - startTime;
+                if (!appOpened && !document.hidden && elapsed >= 1400) {
+                    // App not installed — keep download button highlighted
+                    const dlBtn = document.getElementById('downloadBtn');
+                    dlBtn.style.boxShadow = '0 8px 32px rgba(0, 230, 118, 0.7)';
+                    dlBtn.style.animation = 'pulse 1.5s infinite';
+                }
+            }, 1500);
         }
 
+        // ─────────────────────────────────────────────
+        // Copy code on tap
+        // ─────────────────────────────────────────────
         function copyCode() {
             const code = document.getElementById('refCode').textContent;
             if (code === '—') return;
             navigator.clipboard.writeText(code).then(() => {
+                showToast('✅ Referral code copied!');
+            }).catch(() => {
+                // Fallback for older browsers
+                const ta = document.createElement('textarea');
+                ta.value = code;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
                 showToast('✅ Referral code copied!');
             });
         }
@@ -251,24 +382,34 @@
             const t = document.getElementById('toast');
             t.textContent = msg;
             t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2000);
+            setTimeout(() => t.classList.remove('show'), 2200);
         }
 
+        // ─────────────────────────────────────────────
+        // Download flow
+        // ─────────────────────────────────────────────
         function startDownload() {
             const btn = document.getElementById('downloadBtn');
             btn.disabled = true;
-            btn.textContent = '⬇️ Downloading...';
+            btn.textContent = '⬇️ Preparing...';
             const prog = document.getElementById('progress');
             const fill = document.getElementById('progressFill');
             const text = document.getElementById('progressText');
             prog.classList.add('show');
 
-            // Fake progress (real download browser handles)
+            // 1. Copy referral code to clipboard (if present)
+            if (ref) {
+                navigator.clipboard.writeText('OMNI-REF-' + ref).catch(() => {});
+            }
+
+            // 2. Fake progress bar (real download handled by browser)
             let pct = 0;
             const iv = setInterval(() => {
                 pct += 5;
                 fill.style.width = pct + '%';
-                text.textContent = pct < 100 ? `Downloading... ${pct}%` : 'Download complete! Opening...';
+                text.textContent = pct < 100
+                    ? `Preparing download… ${pct}%`
+                    : 'Download starting…';
                 if (pct >= 100) {
                     clearInterval(iv);
                     setTimeout(() => {
@@ -279,16 +420,26 @@
                         document.body.appendChild(a);
                         a.click();
                         document.body.removeChild(a);
+
+                        text.textContent = '✅ Download started! Check notifications.';
+
                         setTimeout(() => {
                             prog.classList.remove('show');
                             fill.style.width = '0%';
                             btn.disabled = false;
                             btn.textContent = '⬇️ Download APK';
-                        }, 2000);
-                    }, 500);
+                        }, 2500);
+                    }, 400);
                 }
-            }, 60);
+            }, 50);
         }
     </script>
+
+    <style>
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+    </style>
 </body>
 </html>
